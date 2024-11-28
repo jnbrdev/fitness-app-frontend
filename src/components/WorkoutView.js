@@ -1,17 +1,16 @@
-import React from "react";
-import { Card, Button, Container, Row, Col } from "react-bootstrap";
+import React, { useState } from "react";
+import { Card, Button, Container, Row, Col, Offcanvas, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingBag, faDumbbell, faRunning, faHeart, faBicycle, faFlask, faSwimmer, faFistRaised, faArrowsAltH } from "@fortawesome/free-solid-svg-icons";
-
+import { faDumbbell, faRunning, faHeart, faBicycle, faFlask, faSwimmer, faFistRaised, faArrowsAltH } from "@fortawesome/free-solid-svg-icons";
+import { Notyf } from "notyf";
 import AddWorkout from "./AddWorkout";
 
 // Helper function to map workout names to icons
 const getIconForWorkout = (name) => {
   const workoutName = name.toLowerCase();
 
-  // Running and cardio exercises
   if (workoutName.includes("jogging") || workoutName.includes("running") || workoutName.includes("marathon")) {
-    return faRunning; // Running man icon
+    return faRunning;
   } else if (workoutName.includes("body building") || workoutName.includes("strength") || workoutName.includes("powerlifting")) {
     return faDumbbell;
   } else if (workoutName.includes("yoga")) {
@@ -19,22 +18,85 @@ const getIconForWorkout = (name) => {
   } else if (workoutName.includes("cycling") || workoutName.includes("biking")) {
     return faBicycle;
   } else if (workoutName.includes("crossfit") || workoutName.includes("hiit")) {
-    return faFlask; 
+    return faFlask;
   } else if (workoutName.includes("swimming")) {
     return faSwimmer;
   } else if (workoutName.includes("boxing") || workoutName.includes("kickboxing")) {
-    return faFistRaised; // Raised fist icon for boxing or kickboxing
-
-  // Flexibility and mobility
+    return faFistRaised;
   } else if (workoutName.includes("stretching") || workoutName.includes("mobility")) {
-    return faArrowsAltH; // Horizontal arrow icon for flexibility
+    return faArrowsAltH;
   }
-  // If none of the above, return default icon (heart)
-  return faHeart; // Default to heart if no match
+  return faHeart; 
 };
 
-
 export default function WorkoutView({ workoutsData, fetchData }) {
+  const [showOffcanvas, setShowOffcanvas] = useState(false);
+  const [selectedWorkout, setSelectedWorkout] = useState({ name: "", duration: "" });
+  const notyf = new Notyf();
+  const handleEditClick = (workout) => {
+    console.log(workout); // Log to check if id exists
+    setSelectedWorkout(workout);
+    setShowOffcanvas(true);
+  };
+
+  const handleCloseOffcanvas = () => setShowOffcanvas(false);
+
+  const handleSaveChanges = () => {
+    try {
+      // Call the API to update the workout
+
+      fetch(`${process.env.REACT_APP_API_BASE_URL}/workouts/updateWorkout/${selectedWorkout._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          name: selectedWorkout.name,
+          duration: selectedWorkout.duration,
+        }), // Convert to JSON
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.message === "Action Forbidden") {
+            notyf.error("Action Forbidden");
+          } else {
+            notyf.success("Workout Added");
+            fetchData()
+            setShowOffcanvas(false);
+          }
+        })
+        .catch((error) => {
+          notyf.error("Failed to update Workout. Please try again.");
+        });
+    } catch (error) {
+      console.error("Error updating workout", error);
+    }
+  };
+
+    // Delete function
+    const handleDelete = (workoutId) => {
+      // Make the DELETE request to the API
+      fetch(`${process.env.REACT_APP_API_BASE_URL}/workouts/deleteWorkout/${workoutId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.message === "Action Forbidden") {
+            notyf.error("Action Forbidden");
+          } else {
+            notyf.success("Workout Deleted");
+            fetchData(); // Refresh the workout list after deletion
+          }
+        })
+        .catch((error) => {
+          notyf.error("Failed to delete workout. Please try again.");
+        });
+    };
+
   return (
     <Container>
       <Row>
@@ -64,8 +126,12 @@ export default function WorkoutView({ workoutsData, fetchData }) {
                       <strong>Duration:</strong> {workout.duration}
                     </Card.Text>
                     <div className="d-flex justify-content-between">
-                      <Button variant="primary" size="sm">Edit</Button>
-                      <Button variant="danger" size="sm">Delete</Button>
+                      <Button variant="primary" size="sm" onClick={() => handleEditClick(workout)}>
+                        Edit
+                      </Button>
+                      <Button variant="danger" size="sm" onClick={() => handleDelete(workout._id)}>
+                        Delete
+                      </Button>
                     </div>
                   </Col>
                 </Card.Body>
@@ -76,6 +142,38 @@ export default function WorkoutView({ workoutsData, fetchData }) {
           <p>No workouts available</p>
         )}
       </Row>
+
+      {/* Offcanvas for editing workout */}
+      <Offcanvas show={showOffcanvas} onHide={handleCloseOffcanvas} placement="end">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Edit Workout</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Form>
+            <Form.Group controlId="workoutName">
+              <Form.Label>Workout Name</Form.Label>
+              <Form.Control
+                type="text"
+                value={selectedWorkout.name}
+                onChange={(e) => setSelectedWorkout({ ...selectedWorkout, name: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="workoutDuration" className="mt-3">
+              <Form.Label>Duration</Form.Label>
+              <Form.Control
+                type="text"
+                value={selectedWorkout.duration}
+                onChange={(e) => setSelectedWorkout({ ...selectedWorkout, duration: e.target.value })}
+              />
+            </Form.Group>
+
+            <Button variant="primary" className="mt-3" onClick={handleSaveChanges}>
+              Save Changes
+            </Button>
+          </Form>
+        </Offcanvas.Body>
+      </Offcanvas>
     </Container>
   );
 }
