@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, useCallback } from 'react';
 import WorkoutView from '../components/WorkoutView';
 import UserContext from '../context/UserContext';
-
+import { Navigate } from 'react-router-dom'; 
 export default function Workout() {
   const { user } = useContext(UserContext);
   const [workouts, setWorkouts] = useState([]);
@@ -27,8 +27,10 @@ export default function Workout() {
 
   return (
     <>
-        <WorkoutView workoutsData={workouts} fetchData={fetchData} />;
-
+      {user.id ? (
+        <WorkoutView workoutsData={workouts} fetchData={fetchData} />
+      ) : <Navigate to="/login" />}
     </>
   );
+  
 }
