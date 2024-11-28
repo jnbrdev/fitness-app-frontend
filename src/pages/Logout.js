@@ -9,9 +9,10 @@ export default function Logout() {
 
 	useEffect(() => {
 		setUser({
-			id: null
+		  id: null
 		});
-	})
+	  }, [setUser]); // Add setUser to the dependency array
+	  
 
 
 
