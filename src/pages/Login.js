@@ -18,7 +18,7 @@ export default function Login() {
 //test
   function authenticate(e) {
     e.preventDefault();
-    fetch(`${process.env.NEXT_PUBLIC_REACT_APP_API_BASE_URL}/users/login`, {
+    fetch(`https://fitness-app-api-l2sk.onrender.com/users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export default function Login() {
   }
 
   const retrieveUserDetails = (token) => {
-    fetch(`${process.env.NEXT_PUBLIC_REACT_APP_API_BASE_URL}/users/details`, {
+    fetch(`https://fitness-app-api-l2sk.onrender.com/users/details`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

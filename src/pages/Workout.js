@@ -8,7 +8,7 @@ export default function Workout() {
 
   // Use useCallback to memoize fetchData and prevent unnecessary re-renders
   const fetchData = useCallback(() => {
-    let fetchUrl = `${process.env.NEXT_PUBLIC_REACT_APP_API_BASE_URL}/workouts/getMyWorkouts`
+    let fetchUrl = `https://fitness-app-api-l2sk.onrender.com/workouts/getMyWorkouts`
 
     fetch(fetchUrl, {
       headers: {
