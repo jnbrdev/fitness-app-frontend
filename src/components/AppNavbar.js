@@ -32,7 +32,7 @@ export default function AppNavbar() {
   return (
 <Navbar bg="dark" expand="lg" className="sticky-top">
   <Container>
-    <Navbar.Brand as={Link} to="/" className="text-dark brand-font">
+    <Navbar.Brand as={Link} to="/" className="text-white brand-font">
       Fitnice
     </Navbar.Brand>
     {user.id !== null ? (

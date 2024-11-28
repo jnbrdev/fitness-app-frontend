@@ -1,20 +1,38 @@
 import React from "react";
 import { Card, Button, Container, Row, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingBag, faDumbbell, faRunning, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingBag, faDumbbell, faRunning, faHeart, faBicycle, faFlask, faSwimmer, faFistRaised, faArrowsAltH } from "@fortawesome/free-solid-svg-icons";
+
 import AddWorkout from "./AddWorkout";
 
 // Helper function to map workout names to icons
 const getIconForWorkout = (name) => {
-  if (name.toLowerCase().includes("jogging") || name.toLowerCase().includes("running") || name.toLowerCase().includes("marathon")) {
+  const workoutName = name.toLowerCase();
+
+  // Running and cardio exercises
+  if (workoutName.includes("jogging") || workoutName.includes("running") || workoutName.includes("marathon")) {
     return faRunning; // Running man icon
-  } else if (name.toLowerCase().includes("body building") || name.toLowerCase().includes("strength")) {
-    return faDumbbell; // Dumbbell icon
-  } else if (name.toLowerCase().includes("yoga")) {
-    return faHeart; // Heart icon for yoga as a placeholder
+  } else if (workoutName.includes("body building") || workoutName.includes("strength") || workoutName.includes("powerlifting")) {
+    return faDumbbell;
+  } else if (workoutName.includes("yoga")) {
+    return faHeart;
+  } else if (workoutName.includes("cycling") || workoutName.includes("biking")) {
+    return faBicycle;
+  } else if (workoutName.includes("crossfit") || workoutName.includes("hiit")) {
+    return faFlask; 
+  } else if (workoutName.includes("swimming")) {
+    return faSwimmer;
+  } else if (workoutName.includes("boxing") || workoutName.includes("kickboxing")) {
+    return faFistRaised; // Raised fist icon for boxing or kickboxing
+
+  // Flexibility and mobility
+  } else if (workoutName.includes("stretching") || workoutName.includes("mobility")) {
+    return faArrowsAltH; // Horizontal arrow icon for flexibility
   }
+  // If none of the above, return default icon (heart)
   return faHeart; // Default to heart if no match
 };
+
 
 export default function WorkoutView({ workoutsData, fetchData }) {
   return (
