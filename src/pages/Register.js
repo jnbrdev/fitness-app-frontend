@@ -32,7 +32,7 @@ export default function Register() {
     };
 
     const registerUser = () => {
-        fetch(`https://fitness-app-api-l2sk.onrender.com/users/register`, {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/users/register`, {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })

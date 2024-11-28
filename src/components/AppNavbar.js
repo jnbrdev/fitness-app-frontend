@@ -13,7 +13,7 @@ export default function AppNavbar() {
   // Fetch cart data on component mount to get the item count
   useEffect(() => {
     if (user.id) {
-      fetch(`https://fitness-app-api-l2sk.onrender.com/cart/get-cart`, {
+      fetch(`${process.env.NEXT_PUBLIC_REACT_APP_API_BASE_URL}/cart/get-cart`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
