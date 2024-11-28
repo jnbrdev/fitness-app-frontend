@@ -23,7 +23,7 @@ function App() {
   };
   useEffect(() => {
 
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/users/details`, {
+    fetch(`https://fitness-app-api-l2sk.onrender.com/users/details`, {
       headers: {
         Authorization: `Bearer ${ localStorage.getItem('token') }`
       }

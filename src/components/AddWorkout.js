@@ -23,7 +23,7 @@ export default function AddWorkout({ fetchData }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/workouts/addWorkout`, {
+    fetch(`https://fitness-app-api-l2sk.onrender.com/workouts/addWorkout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

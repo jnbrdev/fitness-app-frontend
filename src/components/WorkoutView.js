@@ -45,7 +45,7 @@ export default function WorkoutView({ workoutsData, fetchData }) {
     try {
       // Call the API to update the workout
 
-      fetch(`${process.env.REACT_APP_API_BASE_URL}/workouts/updateWorkout/${selectedWorkout._id}`, {
+      fetch(`https://fitness-app-api-l2sk.onrender.com/workouts/updateWorkout/${selectedWorkout._id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -77,7 +77,7 @@ export default function WorkoutView({ workoutsData, fetchData }) {
     // Delete function
     const handleDelete = (workoutId) => {
       // Make the DELETE request to the API
-      fetch(`${process.env.REACT_APP_API_BASE_URL}/workouts/deleteWorkout/${workoutId}`, {
+      fetch(`https://fitness-app-api-l2sk.onrender.com/workouts/deleteWorkout/${workoutId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
